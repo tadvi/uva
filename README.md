@@ -1,2 +1,2 @@
 # uva
-UVA - analysis, study and experimentation
+UVA - analysis and study
