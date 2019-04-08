@@ -2,15 +2,10 @@
 from itertools import permutations
 
 def main():
-
     bins = 'BGC'
 
     with open('input.txt') as f:
-        while True:
-            line = f.readline()
-            if not line:
-                break
-
+        for line in f:
             row = [int(i) for i in line.split()]
             mmin = 1 << 30
 
