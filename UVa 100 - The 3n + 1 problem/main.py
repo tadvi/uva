@@ -1,29 +1,26 @@
 
-def calc(n, memo):
-    if n in memo:
-        return memo[n]
+def calc(n, cache):
+    if n in cache:
+        return cache[n]
 
     if n%2 == 0:
-        v = calc(n/2, memo)
+        v = calc(n/2, cache)
     else:
-        v = calc(3*n+1, memo)
-    memo[n] = v+1
-    return memo[n]
+        v = calc(3*n+1, cache)
+    cache[n] = v+1
+    return cache[n]
 
 
 def main():
-    memo = {1: 1}
+    cache = {1: 1}
 
-    with open('input.txt') as f:
-        while True:
-            s = f.readline()
-            if not s:
-                break
-            x, y = (int(a) for a in s.split())
+    with open("input.txt") as f:
+        for line in f:
+            x, y = (int(a) for a in line.split())
 
             mx = 0
             for n in range(x, y+1):
-                v = calc(n, memo)
+                v = calc(n, cache)
                 if mx < v:
                     mx = v
 
