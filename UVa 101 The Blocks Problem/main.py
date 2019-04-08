@@ -10,7 +10,7 @@ class Blocks:
         for i, line in enumerate(self.blocks):
             if val in line:
                 return i
-        assert False, 'not found'
+        assert False, "not found"
         return -1
 
     def reset(self, val):
@@ -22,18 +22,18 @@ class Blocks:
             stack = stack[:-1]
 
     def process(self, s1, n1, s2, n2):
-        if s1 == 'move':
+        if s1 == "move":
             self.reset(n1)
 
-        if s2 == 'onto':
+        if s2 == "onto":
             self.reset(n2)
 
-        if s1 == 'move':
+        if s1 == "move":
             pos1, pos2 = self.find(n1), self.find(n2)
             self.blocks[pos1] = self.blocks[pos1][:-1]
             self.blocks[pos2].append(n1)
 
-        elif s1 == 'pile':
+        elif s1 == "pile":
             pos1, pos2 = self.find(n1), self.find(n2)
             for i, val in enumerate(self.blocks[pos1]):
                 if val == n1:
@@ -44,18 +44,16 @@ class Blocks:
 
     def result(self):
         for i, line in enumerate(self.blocks):
-            print(i, ':', ' '.join(str(b) for b in line))
+            print(i, ":", " ".join(str(b) for b in line))
 
 
 def main():
-    with open('input.txt') as f:
+    with open("input.txt") as f:
         n = int(f.readline())
-
         blocks = Blocks(n)
 
-        while True:
-            s = f.readline()
-            if s == 'quit':
+        for s in f:
+            if s == "quit":
                 break
 
             s1, n1, s2, n2 = (a for a in s.split())
@@ -64,5 +62,5 @@ def main():
 
         blocks.result()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
