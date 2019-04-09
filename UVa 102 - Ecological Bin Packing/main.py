@@ -2,12 +2,12 @@
 from itertools import permutations
 
 def main():
-    bins = 'BGC'
+    bins = "BGC"
 
-    with open('input.txt') as f:
+    with open("input.txt") as f:
         for line in f:
             row = [int(i) for i in line.split()]
-            mmin = 1 << 30
+            minim = 1 << 30
 
             for p in permutations([0, 1, 2]):
                 total = 0
@@ -16,14 +16,14 @@ def main():
                         if j != p[i]:
                             total += row[i * 3 + j]
 
-                name = ''.join(bins[i] for i in p)
-                if total < mmin:
-                    curr, mmin = name, total
-                elif total == mmin:
+                name = "".join(bins[i] for i in p)
+                if total < minim:
+                    curr, minim = name, total
+                elif total == minim:
                     curr = min(curr, name)
 
-            print(f'{curr} {mmin}')
+            print(f"{curr} {minim}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
