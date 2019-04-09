@@ -1,70 +1,70 @@
 package main
 
 import (
-    "fmt"
-    "io"
-    "math"
-    "os"
+	"fmt"
+	"io"
+	"os"
 )
 
-const (
-    b = iota
-    g
-    c
-)
-
-type Rec struct {
-    b, g, c int
-}
-
-type Result struct {
-    sum    int
-    best   int
-    config string
-}
-
-func (res *Result) try(rec [3]Rec, conf string) {
-
-    if cur := res.sum - rec[0].b - rec[1].g - rec[2].c; cur < res.best {
-        res.best = cur
-        res.config = conf
-    }
-
+func perm(a []int, start int, fn func([]int)) {
+	if start == len(a)-1 {
+		fn(a)
+		return
+	}
+	for i := start; i < len(a); i++ {
+		a[i], a[start] = a[start], a[i]
+		perm(a, start+1, fn)
+		a[i], a[start] = a[start], a[i]
+	}
 }
 
 func run(w io.Writer) {
+	r, _ := os.Open("input.txt")
+	bins := []string{"B", "G", "C"}
 
-    r, _ := os.Open("input.txt")
+	for {
 
-    defer r.Close()
+		var row [9]int
+		for i := 0; i < 9; i++ {
+			if _, err := fmt.Fscan(r, &row[i]); err != nil {
+				return
+			}
+		}
 
-    for {
+		min := 1 << 30
+		var curr string
 
-        var rec [3]Rec
-        for i := 0; i < 3; i++ {
-            if _, err := fmt.Fscan(r, &rec[i].b, &rec[i].g, &rec[i].c); err == io.EOF {
-                return
-            }
-        }
+		//fmt.Println(rec)
+		perm([]int{0, 1, 2}, 0, func(p []int) {
+			//fmt.Println(a)
+			total := 0
+			for i := 0; i < 3; i++ {
+				for j := 0; j < 3; j++ {
+					if j != p[i] {
+						total += row[i*3+j]
+					}
+				}
+			}
 
-        res := Result{
-            best: math.MaxInt32,
-            sum: rec[0].b + rec[1].b + rec[2].b +
-                rec[0].g + rec[1].g + rec[2].g +
-                rec[0].c + rec[1].c + rec[2].c,
-        }
+			var name string
+			for _, i := range p {
+				name += bins[i]
+			}
 
-        res.try([3]Rec{rec[b], rec[c], rec[g]}, "BCG")
-        res.try([3]Rec{rec[b], rec[g], rec[c]}, "BGC")
-        res.try([3]Rec{rec[g], rec[c], rec[b]}, "CBG")
-        res.try([3]Rec{rec[c], rec[g], rec[b]}, "CGB")
-        res.try([3]Rec{rec[g], rec[b], rec[c]}, "GBC")
-        res.try([3]Rec{rec[c], rec[b], rec[g]}, "GCB")
-        fmt.Fprintf(w, "%s %d\n", res.config, res.best)
-    }
+			if total < min {
+				curr, min = name, total
+			} else if total == min {
+				if name < curr {
+					curr = name
+				}
+			}
+		})
+
+		fmt.Println(curr, min)
+	}
 
 }
 
 func main() {
-    run(os.Stdout)
+	run(os.Stdout)
 }
