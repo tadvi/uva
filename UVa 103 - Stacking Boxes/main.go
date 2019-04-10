@@ -98,20 +98,20 @@ func run(w io.Writer) {
 			break
 		}
 
-		bx := make([][]int, n)
-		for i := range bx {
-			bx[i] = make([]int, d)
-			for j := range bx[i] {
-				fmt.Fscan(r, &bx[i][j])
+		boxes := make([][]int, n)
+		for i := range boxes {
+			boxes[i] = make([]int, d)
+			for j := range boxes[i] {
+				fmt.Fscan(r, &boxes[i][j])
 			}
-			sort.Ints(bx[i])
+			sort.Ints(boxes[i])
 		}
 
 		original := make([][]int, n)
-		copy(original, bx)
+		copy(original, boxes)
 
-		ord := order(n, bx)
-		output(ord, bx, original)
+		ord := order(n, boxes)
+		output(ord, boxes, original)
 	}
 }
 

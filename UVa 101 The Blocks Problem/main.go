@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+// Matrix holds all blocks.
 type Matrix struct {
 	blocks [][]int
 }

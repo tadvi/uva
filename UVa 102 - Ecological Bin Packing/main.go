@@ -34,9 +34,7 @@ func run(w io.Writer) {
 		min := 1 << 30
 		var curr string
 
-		//fmt.Println(rec)
 		perm([]int{0, 1, 2}, 0, func(p []int) {
-			//fmt.Println(a)
 			total := 0
 			for i := 0; i < 3; i++ {
 				for j := 0; j < 3; j++ {

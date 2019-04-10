@@ -6,9 +6,9 @@ import (
 	"os"
 )
 
-type Memo map[int]int
+type cache map[int]int
 
-func (memo Memo) Count(n int) int {
+func (memo cache) count(n int) int {
 	cnt := 1
 	for n != 1 {
 		if v, ok := memo[n]; ok {
@@ -22,6 +22,7 @@ func (memo Memo) Count(n int) int {
 		}
 		cnt++
 	}
+
 	memo[n] = cnt
 	return cnt
 }
@@ -30,7 +31,7 @@ func run(w io.Writer) {
 	r, _ := os.Open("input.txt")
 	defer r.Close()
 
-	var memo = Memo{}
+	var memo = cache{}
 
 	var a, b int
 	for {
@@ -42,7 +43,7 @@ func run(w io.Writer) {
 		}
 
 		for i := a; i <= b; i++ {
-			memo.Count(i)
+			memo.count(i)
 		}
 
 		fmt.Fprintf(w, "%d %d\n", a, b)
