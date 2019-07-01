@@ -3,7 +3,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"os"
 )
 
@@ -12,11 +11,12 @@ type Matrix struct {
 	blocks [][]int
 }
 
-func (mat *Matrix) initBlocks(n int) {
-	mat.blocks = make([][]int, n)
-	for i := range mat.blocks {
-		mat.blocks[i] = []int{i}
+func newBlocks(n int) [][]int {
+	b := make([][]int, n)
+	for i := range b {
+		b[i] = []int{i}
 	}
+	return b
 }
 
 func (mat *Matrix) find(n int) int {
@@ -34,61 +34,62 @@ func (mat *Matrix) reset(n int) {
 	stack := mat.blocks[mat.find(n)]
 
 	for last := len(stack) - 1; stack[last] != n; last = len(stack) - 1 {
-		mat.blocks[stack[last]] = append(mat.blocks[stack[last]], stack[last])
+		i := stack[last]
+		mat.blocks[i] = append(mat.blocks[i], i)
 		stack = stack[:last]
 	}
 }
 
-func (mat *Matrix) move(n1, n2 int) {
-	pos1, pos2 := mat.find(n1), mat.find(n2)
-	mat.blocks[pos1] = mat.blocks[pos1][:len(mat.blocks[pos1])-1]
-	mat.blocks[pos2] = append(mat.blocks[pos2], n1)
+func (mat *Matrix) move(a, b int) {
+	p1, p2 := mat.find(a), mat.find(b)
+	mat.blocks[p1] = mat.blocks[p1][:len(mat.blocks[p1])-1]
+	mat.blocks[p2] = append(mat.blocks[p2], a)
 }
 
-func (mat *Matrix) pile(n1, n2 int) {
-	pos1, pos2 := mat.find(n1), mat.find(n2)
-	for i, val := range mat.blocks[pos1] {
-		if val == n1 {
-			blocksToMove := mat.blocks[pos1][i:]
-			mat.blocks[pos1] = mat.blocks[pos1][:i]
-			mat.blocks[pos2] = append(mat.blocks[pos2], blocksToMove...)
+func (mat *Matrix) pile(a, b int) {
+	p1, p2 := mat.find(a), mat.find(b)
+	for i, val := range mat.blocks[p1] {
+		if val == a {
+			blocksToMove := mat.blocks[p1][i:]
+			mat.blocks[p1] = mat.blocks[p1][:i]
+			mat.blocks[p2] = append(mat.blocks[p2], blocksToMove...)
 			return
 		}
 	}
 }
 
-func (mat *Matrix) process(s1, s2 string, n1, n2 int) {
-	if s1 == "move" {
-		mat.reset(n1)
+func (mat *Matrix) process(act, pos string, a, b int) {
+	if act == "move" {
+		mat.reset(a)
 	}
-	if s2 == "onto" {
-		mat.reset(n2)
+	if pos == "onto" {
+		mat.reset(b)
 	}
 
-	switch s1 {
+	switch act {
 	case "move":
-		mat.move(n1, n2)
+		mat.move(a, b)
 	case "pile":
-		mat.pile(n1, n2)
+		mat.pile(a, b)
 	}
 }
 
-func run(w io.Writer) {
-	in, _ := os.Open("input.txt")
-	defer in.Close()
+func run() {
+	f, _ := os.Open("input.txt")
+	defer f.Close()
 
-	var n, n1, n2 int
-	var s1, s2 string
-	fmt.Fscan(in, &n)
+	var n, a, b int
+	var act, pos string
+	fmt.Fscan(f, &n)
 
-	mat := &Matrix{}
-	mat.initBlocks(n)
+	mat := &Matrix{blocks: newBlocks(n)}
+
 	for {
-		if fmt.Fscan(in, &s1); s1 == "quit" {
+		if fmt.Fscan(f, &act); act == "quit" {
 			break
 		}
-		fmt.Fscan(in, &n1, &s2, &n2)
-		mat.process(s1, s2, n1, n2)
+		fmt.Fscan(f, &a, &pos, &b)
+		mat.process(act, pos, a, b)
 	}
 
 	for i, line := range mat.blocks {
@@ -101,5 +102,5 @@ func run(w io.Writer) {
 }
 
 func main() {
-	run(os.Stdout)
+	run()
 }

@@ -4,6 +4,6 @@ UVa Online Judge is an online automated judge for programming problems hosted by
 
 **sample** subfolders contain solutions collected elsewhere. They are assumed to be correct.
 
-This repo is used for algorithm analysis, study and experimentation. My experiments are in **main.go** files in main subfolders. At the time of this writing in 2018 UVa does not have online automated judge for Go language. Therefore my solutions have no independent verification.
+This repo is used for algorithm analysis, study and experimentation. My experiments are in **main.go** or **main.py** files in main subfolders. At the time of this writing in 2018 UVa does not have online automated judge for Go language. Therefore my solutions have no independent verification.
 
 Many study experiments are just copied and re-coded versions of solutions from **sample** subfolders.
