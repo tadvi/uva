@@ -2,42 +2,41 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"os"
 )
 
-func perm(a []int, start int, fn func([]int)) {
-	if start == len(a)-1 {
+func permutate(a []int, pos int, fn func([]int)) {
+	if pos == len(a)-1 {
 		fn(a)
 		return
 	}
-	for i := start; i < len(a); i++ {
-		a[i], a[start] = a[start], a[i]
-		perm(a, start+1, fn)
-		a[i], a[start] = a[start], a[i]
+	for i := pos; i < len(a); i++ {
+		a[i], a[pos] = a[pos], a[i]
+		permutate(a, pos+1, fn)
+		a[i], a[pos] = a[pos], a[i]
 	}
 }
 
-func run(w io.Writer) {
-	r, _ := os.Open("input.txt")
+func run() {
+	f, _ := os.Open("input.txt")
+	defer f.Close()
+
 	bins := []string{"B", "G", "C"}
-
 	for {
-
 		var row [9]int
 		for i := 0; i < 9; i++ {
-			if _, err := fmt.Fscan(r, &row[i]); err != nil {
+			if _, err := fmt.Fscan(f, &row[i]); err != nil {
 				return
 			}
 		}
 
 		min := 1 << 30
-		var curr string
+		var s string
 
-		perm([]int{0, 1, 2}, 0, func(p []int) {
+		permutate([]int{0, 1, 2}, 0, func(p []int) {
 			total := 0
-			for i := 0; i < 3; i++ {
-				for j := 0; j < 3; j++ {
+			for i := range bins {
+				for j := range bins {
 					if j != p[i] {
 						total += row[i*3+j]
 					}
@@ -50,19 +49,18 @@ func run(w io.Writer) {
 			}
 
 			if total < min {
-				curr, min = name, total
+				s, min = name, total
 			} else if total == min {
-				if name < curr {
-					curr = name
+				if name < s {
+					s = name
 				}
 			}
 		})
 
-		fmt.Println(curr, min)
+		fmt.Println(s, min)
 	}
-
 }
 
 func main() {
-	run(os.Stdout)
+	run()
 }
