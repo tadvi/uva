@@ -2,36 +2,30 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"os"
 )
 
-type cache map[int]int
-
-func (memo cache) count(n int) int {
-	cnt := 1
-	for n != 1 {
-		if v, ok := memo[n]; ok {
-			return v
-		}
-
-		if n%2 != 0 {
-			n = 3*n + 1
-		} else {
-			n = n / 2
-		}
-		cnt++
+func count(memo map[int]int, n int) int {
+	if v, ok := memo[n]; ok {
+		return v
 	}
 
-	memo[n] = cnt
-	return cnt
+	var v int
+	if n%2 == 0 {
+		v = count(memo, n/2) + 1
+	} else {
+		v = count(memo, 3*n+1) + 1
+	}
+
+	memo[n] = v
+	return v
 }
 
-func run(w io.Writer) {
+func run() {
 	r, _ := os.Open("input.txt")
 	defer r.Close()
 
-	var memo = cache{}
+	memo := map[int]int{1: 1}
 
 	var a, b int
 	for {
@@ -42,14 +36,17 @@ func run(w io.Writer) {
 			a, b = b, a
 		}
 
+		max := 0
 		for i := a; i <= b; i++ {
-			memo.count(i)
+			if v := count(memo, i); max < v {
+				max = v
+			}
 		}
 
-		fmt.Fprintf(w, "%d %d\n", a, b)
+		fmt.Println(a, b, max)
 	}
 }
 
 func main() {
-	run(os.Stdout)
+	run()
 }

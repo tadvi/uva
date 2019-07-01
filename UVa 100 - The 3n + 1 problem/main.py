@@ -18,13 +18,13 @@ def main():
         for line in f:
             x, y = (int(a) for a in line.split())
 
-            mx = 0
+            maxx = 0
             for n in range(x, y+1):
                 v = calc(n, cache)
-                if mx < v:
-                    mx = v
+                if maxx < v:
+                    maxx = v
 
-            print(x, y)
+            print(x, y, maxx)
 
 if __name__ == '__main__':
     main()
