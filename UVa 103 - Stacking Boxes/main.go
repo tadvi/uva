@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"sort"
 	"strconv"
@@ -87,14 +86,14 @@ func output(ordered []int, boxes, original [][]int) {
 	fmt.Println(strings.Join(ret, " "))
 }
 
-func run(w io.Writer) {
-	r, _ := os.Open("input.txt")
-	defer r.Close()
+func run() {
+	f, _ := os.Open("input.txt")
+	defer f.Close()
 
 	var n, d int
 
 	for {
-		if _, err := fmt.Fscan(r, &n, &d); err != nil {
+		if _, err := fmt.Fscan(f, &n, &d); err != nil {
 			break
 		}
 
@@ -102,13 +101,12 @@ func run(w io.Writer) {
 		for i := range boxes {
 			boxes[i] = make([]int, d)
 			for j := range boxes[i] {
-				fmt.Fscan(r, &boxes[i][j])
+				fmt.Fscan(f, &boxes[i][j])
 			}
 			sort.Ints(boxes[i])
 		}
 
-		original := make([][]int, n)
-		copy(original, boxes)
+		original := append(boxes[:0:0], boxes...)
 
 		ord := order(n, boxes)
 		output(ord, boxes, original)
@@ -116,5 +114,5 @@ func run(w io.Writer) {
 }
 
 func main() {
-	run(os.Stdout)
+	run()
 }
