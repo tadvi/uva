@@ -14,6 +14,7 @@ func permutate(slice []int, pos int, fn func(slice []int)) {
 
 }
 
+// Permutate slice of ints.
 func Permutate(slice []int, fn func(slice []int)) {
 	permutate(slice, 0, fn)
 }

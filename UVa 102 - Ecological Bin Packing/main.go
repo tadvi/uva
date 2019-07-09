@@ -3,19 +3,9 @@ package main
 import (
 	"fmt"
 	"os"
-)
 
-func permutate(a []int, pos int, fn func([]int)) {
-	if pos == len(a)-1 {
-		fn(a)
-		return
-	}
-	for i := pos; i < len(a); i++ {
-		a[i], a[pos] = a[pos], a[i]
-		permutate(a, pos+1, fn)
-		a[i], a[pos] = a[pos], a[i]
-	}
-}
+	"github.com/tadvi/uva/functool"
+)
 
 func run() {
 	f, _ := os.Open("input.txt")
@@ -33,7 +23,7 @@ func run() {
 		min := 1 << 30
 		var s string
 
-		permutate([]int{0, 1, 2}, 0, func(p []int) {
+		functool.Permutate([]int{0, 1, 2}, func(p []int) {
 			total := 0
 			for i := range bins {
 				for j := range bins {
