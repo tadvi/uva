@@ -21,25 +21,25 @@ class Blocks:
             self.blocks[stack[-1]].append(self.blocks[pos][-1])
             stack = stack[:-1]
 
-    def process(self, s1, n1, s2, n2):
-        if s1 == "move":
-            self.reset(n1)
+    def process(self, action, src, directive, dest):
+        if action == "move":
+            self.reset(src)
 
-        if s2 == "onto":
-            self.reset(n2)
+        if directive == "onto":
+            self.reset(dest)
 
-        if s1 == "move":
-            pos1, pos2 = self.find(n1), self.find(n2)
-            self.blocks[pos1] = self.blocks[pos1][:-1]
-            self.blocks[pos2].append(n1)
+        if action == "move":
+            from_, to = self.find(src), self.find(dest)
+            self.blocks[from_] = self.blocks[from_][:-1]
+            self.blocks[to].append(src)
 
-        elif s1 == "pile":
-            pos1, pos2 = self.find(n1), self.find(n2)
-            for i, val in enumerate(self.blocks[pos1]):
-                if val == n1:
-                    blocksToMove = self.blocks[pos1][i:]
-                    self.blocks[pos1] = self.blocks[pos1][:i]
-                    self.blocks[pos2].extend(blocksToMove)
+        elif action == "pile":
+            from_, to = self.find(src), self.find(dest)
+            for i, val in enumerate(self.blocks[from_]):
+                if val == src:
+                    blocksToMove = self.blocks[from_][i:]
+                    self.blocks[from_] = self.blocks[from_][:i]
+                    self.blocks[to].extend(blocksToMove)
                     break
 
     def result(self):
@@ -52,13 +52,13 @@ def main():
         n = int(f.readline())
         blocks = Blocks(n)
 
-        for s in f:
-            if s == "quit":
+        for line in f:
+            if line == "quit":
                 break
 
-            s1, n1, s2, n2 = (a for a in s.split())
-            n1, n2 = int(n1), int(n2)
-            blocks.process(s1, n1, s2, n2)
+            action, from_, directive, to = (a for a in line.split())
+            from_, to = int(from_), int(to)
+            blocks.process(action, from_, directive, to)
 
         blocks.result()
 
